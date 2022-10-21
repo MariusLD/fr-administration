@@ -1,5 +1,7 @@
 import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpStatus} from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
 import { Association } from './association.entity';
+import { User } from 'src/users/user.entity';
 
 const assoc : Association[] = [
     {
@@ -11,6 +13,9 @@ const assoc : Association[] = [
 
 @Injectable()
 export class AssociationsService {
+    constructor(
+        private service: UsersService
+    ) {}
     @Get()
     getAll(): Association[] {
         return assoc;
@@ -23,7 +28,7 @@ export class AssociationsService {
 
     @Post()
     create(@Body() idUsers : number[], name : string): Association {
-        let id : number = assoc.length+1;
+        let id : number = assoc.length;
         let a:Association = new Association(id, idUsers, name);
         assoc .push(a);
         return a;
@@ -49,5 +54,15 @@ export class AssociationsService {
         } else {
             throw new HttpException(`AUCUN UTILISATEUR CORRESPONDANT AVEC L\'ID : ${id}`, HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Get(':id/members')
+    getMembers(@Param() id : number): User[] {
+        let a : Association = assoc.find(asso => asso.id == id);
+        let usersList : User[];
+        for (var IDs of a.idUsers) {
+            usersList.push(this.service.getByID(IDs));
+        }
+        return usersList;
     }
 }

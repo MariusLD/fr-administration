@@ -25,7 +25,7 @@ export class UsersService {
 
     @Post()
     create(@Body() lastname : string, firstname : string, age : number): User {
-        let id : number = users.length+1;
+        let id : number = users.length;
         let u:User = new User(id, lastname, firstname, age);
         users.push(u);
         return u;
