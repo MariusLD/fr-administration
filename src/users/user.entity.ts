@@ -1,4 +1,8 @@
+import { Entity, PrimaryColumn } from "typeorm";
+
+@Entity()
 export class User {
+    @PrimaryColumn()
     public id: number;
     public lastname: string;
     public firstname: string;

@@ -1,39 +1,42 @@
 import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpStatus } from '@nestjs/common';
 //https://bobbyhadz.com/blog/typescript-file-is-not-a-module
 import { User } from './user.entity';
-
-const users: User[] = [
-    {
-        id: 0,
-        lastname: 'Doe',
-        firstname: 'John',
-        age: 23
-    }
-]
+import { InjectRepository } from '@nestjs/typeorm';
+import { Equal, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-    @Get()
-    getAll(): User[] {
-        return users;
-    }
 
+    constructor(
+        @InjectRepository(User)
+        private repository : Repository<User>
+    ) {}
+
+    @Get()
+    async getAll(): Promise<User[]> {
+        return this.repository.find();
+    }
     @Get(':id')
-    getByID(@Param() id: number): User {
-        return users.find(user => user.id == id);
+    async getByID(@Param() givenID : number): Promise<User> {
+        return this.repository.findOne({where:{id : Equal(givenID)}});
     }
 
     @Post()
-    create(@Body() lastname: string, firstname: string, age: number): User {
-        let id: number = users.length;
-        let u: User = new User(id, lastname, firstname, age);
-        users.push(u);
-        return u;
+    async create(@Body() lastname: string, firstname: string, age: number): Promise<User> {
+        let length : number = (await this.getAll()).length;
+        const newUser = await this.repository.create({
+            id: length,
+            lastname: lastname,
+            firstname: firstname,
+            age: age
+        })
+        await this.repository.save(newUser);
+        return newUser;
     }
 
     @Put(':id')
-    edit(@Param() id: number, @Body() lastname: string, firstname: string, age: number): User {
-        let u: User = users.find(user => user.id == id);
+    async edit(@Param() id: number, @Body() lastname: string, firstname: string, age: number): Promise<User> {
+        let u: User = await this.getByID(id);
         if (lastname !== undefined) {
             u.lastname = lastname;
         }
@@ -43,14 +46,24 @@ export class UsersService {
         if (age !== undefined) {
             u.age = age;
         }
+        await this.repository.save(u);
         return u;
     }
 
     @Delete(':id')
-    popFromUsers(@Param() id: number) {
-        let u: User = users.find(user => user.id == id);
+    async popFromUsers(@Param() id: number) {
+        let u: User = await this.getByID(id);
         if (u !== undefined) {
-            users.splice(id, 1);
+            this.repository.delete(u);
         }
+    }
+
+    async getUsersByIDs(ids : number[]): Promise<User[]>{
+        let list : User[];
+        for (var id of ids) {
+            let u : User = await this.getByID(id);
+            list.push(u);
+        }
+        return list;
     }
 }

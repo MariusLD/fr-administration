@@ -9,27 +9,27 @@ export class UsersController {
     ) { }
 
     @Get()
-    getAll(): User[] {
-        return this.service.getAll();
+    async getAll(): Promise<User[]> {
+        return await this.service.getAll();
     }
 
     @Get(':id')
-    getByID(@Param() parameter): User {
-        return this.service.getByID(parameter.id);
+    async getByID(@Param() parameter): Promise<User> {
+        return await this.service.getByID(parameter.id);
     }
 
     @Post()
-    create(@Body() input: any): User {
-        return this.service.create(input.lastname, input.firstname, input.age);
+    async create(@Body() input: any): Promise<User> {
+        return await this.service.create(input.lastname, input.firstname, input.age);
     }
 
     @Put(':id')
-    edit(@Param() parameter, @Body() input: any): User {
-        return this.service.edit(parameter.id, input.lastname, input.firstname, input.age);
+    async edit(@Param() parameter, @Body() input: any): Promise<User> {
+        return await this.service.edit(parameter.id, input.lastname, input.firstname, input.age);
     }
 
     @Delete(':id')
-    popFromUsers(@Param() parameter) {
-        this.service.popFromUsers(parameter.id);
+    async popFromUsers(@Param() parameter) {
+        await this.service.popFromUsers(parameter.id);
     }
 }

@@ -2,67 +2,64 @@ import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpSta
 import { UsersService } from 'src/users/users.service';
 import { Association } from './association.entity';
 import { User } from 'src/users/user.entity';
-
-const assoc : Association[] = [
-    {
-        id: 0,
-        idUsers : [0],
-        name : "Les ptits filous"
-    }
-]
+import { InjectRepository } from '@nestjs/typeorm';
+import { Equal, Repository } from 'typeorm';
 
 @Injectable()
 export class AssociationsService {
+
     constructor(
-        private service: UsersService
+        private service: UsersService,
+        @InjectRepository(Association)
+        private repository : Repository<Association>
     ) {}
+
     @Get()
-    getAll(): Association[] {
-        return assoc;
+    async getAll(): Promise<Association[]> {
+        return this.repository.find();
     }
 
     @Get(':id') 
-    getByID(@Param() id : number): Association{
-        return assoc.find(asso => asso.id == id);
+    async getByID(@Param() givenID : number): Promise<Association>{
+        return await this.repository.findOne({where:{id : Equal(givenID)}});
     }
 
     @Post()
-    create(@Body() idUsers : number[], name : string): Association {
-        let id : number = assoc.length;
-        let a:Association = new Association(id, idUsers, name);
-        assoc .push(a);
-        return a;
+    async create(@Body() idUsers : number[], name : string): Promise<Association> {
+        let length : number = (await this.getAll()).length;
+        const newAssociation = await this.repository.create({
+            id: length,
+            idUsers: await this.service.getUsersByIDs(idUsers),
+            name: name
+        })
+        await this.repository.save(newAssociation);
+        return newAssociation;
     }
 
     @Put(':id')
-    edit(@Param() id : number, @Body() idUsers : number[], name : string) : Association {
-        let a : Association = assoc.find(asso => asso.id == id);
+    async edit(@Param() id : number, @Body() idUsers : number[], name : string) : Promise<Association> {
+        let a: Association = await this.getByID(id);
         if (idUsers !== undefined) {
-            a.idUsers=idUsers;
+            a.idUsers = await this.service.getUsersByIDs(idUsers);
         }
         if (name !== undefined) {
-            a.name=name;
+            a.name = name;
         }
+        await this.repository.save(a);
         return a;
     }
 
     @Delete(':id')
-    popFromUsers(@Param() id : number) {
-        let a : Association = assoc.find(asso => asso.id == id);
+    async popFromUsers(@Param() id : number) {
+        let a: Association = await this.getByID(id);
         if (a !== undefined) {
-            assoc.splice(id, 1);
-        } else {
-            throw new HttpException(`AUCUN UTILISATEUR CORRESPONDANT AVEC L\'ID : ${id}`, HttpStatus.NOT_FOUND);
+            this.repository.delete(a);
         }
     }
 
     @Get(':id/members')
-    getMembers(@Param() id : number): User[] {
-        let a : Association = assoc.find(asso => asso.id == id);
-        let usersList : User[];
-        for (var IDs of a.idUsers) {
-            usersList.push(this.service.getByID(IDs));
-        }
-        return usersList;
+    async getMembers(@Param() id : number): Promise<User[]> {
+        let a: Association = await this.getByID(id);
+        return a.idUsers;
     }
 }
