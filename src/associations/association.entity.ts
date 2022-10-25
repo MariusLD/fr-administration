@@ -1,5 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
 import { User } from 'src/users/user.entity';
+import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
 export class Association {

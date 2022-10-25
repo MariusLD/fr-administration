@@ -14,11 +14,11 @@ export class UsersService {
 
     @Get()
     async getAll(): Promise<User[]> {
-        return this.repository.find();
+        return await this.repository.find();
     }
     @Get(':id')
     async getByID(@Param() givenID : number): Promise<User> {
-        return this.repository.findOne({where:{id : Equal(givenID)}});
+        return await this.repository.findOne({where:{id : Equal(givenID)}});
     }
 
     @Post()
