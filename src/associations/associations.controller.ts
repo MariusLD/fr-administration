@@ -2,10 +2,15 @@ import { Controller, Get, Body, Post, Param, Put, Delete } from '@nestjs/common'
 import { AssociationsService } from './associations.service';
 import { Association } from './association.entity';
 import { User } from 'src/users/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { ApiTags } from '@nestjs/swagger';
+import { AssociationInput } from './association.input';
 
+@ApiTags('associations')
 @Controller('associations')
 export class AssociationsController {
     constructor(
+        private serviceUser: UsersService,
         private service :  AssociationsService
     ){}
 
@@ -25,13 +30,15 @@ export class AssociationsController {
     }
 
     @Post()
-    async create(@Body() input:any): Promise<Association> {
-        return await this.service.create(input.idUsers, input.name);
+    async create(@Body() input: AssociationInput): Promise<Association> {
+        let idUsers : User[] = await this.serviceUser.getUsersByIDs(input.idUsers);
+        return await this.service.create(idUsers, input.name);
     }
 
     @Put(':id')
-    async edit(@Param() parameter, @Body() input:any) : Promise<Association> {
-        return await this.service.edit(parameter.id, input.idUsers, input.name);
+    async edit(@Param() parameter, @Body() input: AssociationInput) : Promise<Association> {
+        let idUsers : User[] = await this.serviceUser.getUsersByIDs(input.idUsers);
+        return await this.service.edit(parameter.id, idUsers, input.name);
     }
 
     @Delete(':id')

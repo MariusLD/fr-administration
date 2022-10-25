@@ -1,5 +1,4 @@
-import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpStatus} from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { Injectable, Get, Body, Post, Param, Put, Delete} from '@nestjs/common';
 import { Association } from './association.entity';
 import { User } from 'src/users/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +8,6 @@ import { Equal, Repository } from 'typeorm';
 export class AssociationsService {
 
     constructor(
-        private service: UsersService,
         @InjectRepository(Association)
         private repository : Repository<Association>
     ) {}
@@ -25,22 +23,22 @@ export class AssociationsService {
     }
 
     @Post()
-    async create(@Body() idUsers : number[], name : string): Promise<Association> {
+    async create(@Body() idUsers : User[], name : string): Promise<Association> {
         let length : number = (await this.getAll()).length;
         const newAssociation = await this.repository.create({
             id: length,
-            idUsers: await this.service.getUsersByIDs(idUsers),
+            idUsers: idUsers,
             name: name
         })
         await this.repository.save(newAssociation);
         return newAssociation;
     }
-
+s
     @Put(':id')
-    async edit(@Param() id : number, @Body() idUsers : number[], name : string) : Promise<Association> {
+    async edit(@Param() id : number, @Body() idUsers : User[], name : string) : Promise<Association> {
         let a: Association = await this.getByID(id);
         if (idUsers !== undefined) {
-            a.idUsers = await this.service.getUsersByIDs(idUsers);
+            a.idUsers = idUsers;
         }
         if (name !== undefined) {
             a.name = name;
