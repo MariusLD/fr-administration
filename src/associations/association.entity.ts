@@ -4,7 +4,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
 export class Association {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id : number;
 
     @ManyToMany(type=>User, {eager: true})

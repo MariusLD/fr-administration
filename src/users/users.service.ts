@@ -22,20 +22,21 @@ export class UsersService {
     }
 
     @Post()
-    async create(@Body() lastname: string, firstname: string, age: number): Promise<User> {
+    async create(@Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
         let length : number = (await this.getAll()).length;
         const newUser = await this.repository.create({
             id: length,
             lastname: lastname,
             firstname: firstname,
-            age: age
+            age: age,
+            password: password
         })
         await this.repository.save(newUser);
         return newUser;
     }
 
     @Put(':id')
-    async edit(@Param() id: number, @Body() lastname: string, firstname: string, age: number): Promise<User> {
+    async edit(@Param() id: number, @Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
         let u: User = await this.getByID(id);
         if (lastname !== undefined) {
             u.lastname = lastname;
@@ -45,6 +46,9 @@ export class UsersService {
         }
         if (age !== undefined) {
             u.age = age;
+        }
+        if (password !== undefined) {
+            u.password = password;
         }
         await this.repository.save(u);
         return u;

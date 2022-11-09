@@ -26,6 +26,7 @@ export class UsersController {
     }) 
     @Get(':id')
     async getByID(@Param('id') parameter : number): Promise<User> {
+        console.log((await this.service.getByID(parameter)).password);
         return this.service.getByID(parameter);
     }
 
@@ -35,7 +36,7 @@ export class UsersController {
     }) 
     @Post()
     async create(@Body() input: UserInput): Promise<User> {
-        return this.service.create(input.lastname, input.firstname, input.age);
+        return this.service.create(input.lastname, input.firstname, input.age, input.password);
     }
 
     @ApiResponse({
@@ -44,7 +45,7 @@ export class UsersController {
     }) 
     @Put(':id')
     async edit(@Param('id') parameter : number, @Body() input: UserInput): Promise<User> {
-        return this.service.edit(parameter, input.lastname, input.firstname, input.age);
+        return this.service.edit(parameter, input.lastname, input.firstname, input.age, input.password);
     }
 
     @ApiResponse({

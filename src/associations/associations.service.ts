@@ -24,9 +24,7 @@ export class AssociationsService {
 
     @Post()
     async create(@Body() idUsers : User[], name : string): Promise<Association> {
-        let length : number = (await this.getAll()).length;
         const newAssociation = await this.repository.create({
-            id: length,
             idUsers: idUsers,
             name: name
         })
