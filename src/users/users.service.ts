@@ -3,6 +3,7 @@ import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpSta
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -23,13 +24,14 @@ export class UsersService {
 
     @Post()
     async create(@Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
-        let length : number = (await this.getAll()).length;
+        const psswrd: string = password;
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(psswrd, saltOrRounds);
         const newUser = await this.repository.create({
-            id: length,
             lastname: lastname,
             firstname: firstname,
             age: age,
-            password: password
+            password: hash
         })
         await this.repository.save(newUser);
         return newUser;
