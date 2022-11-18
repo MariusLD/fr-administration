@@ -27,7 +27,7 @@ export class UsersService {
         const psswrd: string = password;
         const saltOrRounds = 10;
         const hash = await bcrypt.hash(psswrd, saltOrRounds);
-        const newUser = await this.repository.create({
+        const newUser = this.repository.create({
             lastname: lastname,
             firstname: firstname,
             age: age,

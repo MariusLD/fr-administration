@@ -8,6 +8,7 @@ import { AssociationsService } from './associations.service';
 @Module({
   controllers: [AssociationsController],
   providers: [AssociationsService],
-  imports: [UsersModule, TypeOrmModule.forFeature([Association])]
+  imports: [UsersModule, TypeOrmModule.forFeature([Association])],
+  exports: [AssociationsService]
 })
 export class AssociationsModule {}

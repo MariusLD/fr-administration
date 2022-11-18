@@ -28,7 +28,6 @@ export class UsersController {
     }) 
     @Get(':id')
     async getByID(@Param('id') parameter : number): Promise<User> {
-        console.log((await this.service.getByID(parameter)).password);
         return this.service.getByID(parameter);
     }
 
