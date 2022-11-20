@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+const saltOrRounds = 10;
+
 @Injectable()
 export class UsersService {
 
@@ -24,9 +26,7 @@ export class UsersService {
 
     @Post()
     async create(@Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
-        const psswrd: string = password;
-        const saltOrRounds = 10;
-        const hash = await bcrypt.hash(psswrd, saltOrRounds);
+        const hash = await bcrypt.hash(password, saltOrRounds);
         const newUser = this.repository.create({
             lastname: lastname,
             firstname: firstname,
@@ -50,7 +50,8 @@ export class UsersService {
             u.age = age;
         }
         if (password !== undefined) {
-            u.password = password;
+            const hash = await bcrypt.hash(password, saltOrRounds);
+            u.password = hash;
         }
         await this.repository.save(u);
         return u;
