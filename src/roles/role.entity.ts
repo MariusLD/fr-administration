@@ -1,17 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToMany } from "typeorm";
-import { User } from 'src/users/user.entity';
-import { Association } from "src/associations/association.entity";
+import { Column, Entity, JoinColumn, ManyToMany } from 'typeorm';
+import { User } from '../users/user.entity';
+import { Association } from '../associations/association.entity';
 
 @Entity()
 export class Role {
     @Column()
-    name : string;
+    public name : string;
 
     @ManyToMany(type => User)
     @JoinColumn()
-    idUser : number;
+    public idUser : number;
 
     @ManyToMany(type => Association)
     @JoinColumn()
-    idAssociation : number;
+    public idAssociation : number;
 }

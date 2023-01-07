@@ -1,21 +1,16 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { User } from 'src/users/user.entity';
-import { ApiProperty } from "@nestjs/swagger";
+import { User } from '../users/user.entity';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Association {
-    @PrimaryGeneratedColumn()
-    id : number;
 
-    @ManyToMany(type=>User, {eager: true})
+    @PrimaryGeneratedColumn()
+    public id: number;
+
+    @ManyToMany(type => User, { eager: true }) // mode chargement de toutes les données
     @JoinTable()
-    idUsers : User[];
+    public users: User[];
 
     @Column()
-    name : string;
-
-    constructor(idUsers : User[], name : string){
-        this.idUsers = idUsers;
-        this.name = name;
-    }
+    public name: string;
 }

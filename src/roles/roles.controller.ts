@@ -1,59 +1,58 @@
-import { Controller, Get, Body, Post, Param, Put, Delete } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
-import { Association } from 'src/associations/association.entity';
-import { AssociationsService } from 'src/associations/associations.service';
-import { User } from 'src/users/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { Controller, Get, Body, Post, Param, Put, Delete, HttpStatus, HttpException } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Role } from './role.entity';
 import { RoleInput } from './role.input';
 import { RoleUpdate } from './role.update';
 import { RolesService } from './roles.service';
 
+@ApiTags('roles')
 @Controller('roles')
 export class RolesController {
     constructor(
-        private serviceUser: UsersService,
-        private serviceAssociation:  AssociationsService,
-        private serviceRole: RolesService
-    ){}
+        private service: RolesService
+    ) { }
 
 
     @ApiResponse({
         description: "Creates a new role",
         type: RoleInput,
-    })   
+    })
     @Post()
     async create(@Body() input: RoleInput): Promise<Role> {
-        return await this.serviceRole.create(input.name, input.idUser, input.idAssociation);
+        return this.service.create(
+            input.name,
+            input.idUser,
+            input.idAssociation);
     }
 
     @ApiResponse({
         description: "Returns the role",
         type: RoleInput,
-
     })
-    @Get(':idU/:idA') 
-    async getByID(@Param('idU') idUser : number, @Param('idA') idAssociation : number): Promise<Role>{
-        let users = await this.serviceAssociation.getMembers(idAssociation);
-        if (users.includes(await this.serviceUser.getByID(idUser))) {
-            return await this.serviceRole.getByID(idUser, idAssociation)
+    @Get(':idU/:idA')
+    async getByID(@Param('idU') idUser: number, @Param('idA') idAssociation: number): Promise<Role> {
+        const role: Role = await this.service.get(idUser, idAssociation);
+        if (role === null) {
+            throw new HttpException(`Could not find role for user with the id ${idUser} in association with th id ${idAssociation}`, HttpStatus.NOT_FOUND)
         }
-    }
-
-    @ApiResponse({
-        description: "Delete the role",
-    })   
-    @Delete(':idU/:idA')
-    async deleteByID(@Param('idU') idUser : number, @Param('idA') idAssociation : number) {
-        await this.serviceRole.deleteByID(idUser, idAssociation);
+        return role
     }
 
     @ApiResponse({
         description: "Update a specified association",
         type: RoleInput,
-    })  
+    })
     @Put(':idU/:idA')
-    async edit(@Param('idU') idUser : number, @Param('idA') idAssociation, @Body() input: RoleUpdate) : Promise<Role> {
-        return await this.serviceRole.edit(idUser, idAssociation, input.name);
+    async updateById(@Param('idU') idUser: number, @Param('idA') idAssociation, @Body() input: RoleUpdate): Promise<Role> {
+        return this.service.update(idUser, idAssociation, input.name);
     }
+
+    @ApiResponse({
+        description: "Delete the role",
+    })
+    @Delete(':idU/:idA')
+    async deleteByID(@Param('idU') idUser: number, @Param('idA') idAssociation: number): Promise<boolean> {
+        return this.service.delete(idUser, idAssociation);
+    }
+
 }

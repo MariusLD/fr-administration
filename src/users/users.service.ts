@@ -1,4 +1,4 @@
-import { Injectable, Get, Body, Post, Param, Put, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 //https://bobbyhadz.com/blog/typescript-file-is-not-a-module
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,65 +12,49 @@ export class UsersService {
 
     constructor(
         @InjectRepository(User)
-        private repository : Repository<User>
-    ) {}
+        private repository: Repository<User>
+    ) { }
 
-    @Get()
     async getAll(): Promise<User[]> {
-        return await this.repository.find();
-    }
-    @Get(':id')
-    async getByID(@Param() givenID : number): Promise<User> {
-        return await this.repository.findOne({where:{id : Equal(givenID)}});
+        return this.repository.find();
     }
 
-    @Post()
-    async create(@Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
+    async get(givenID: number): Promise<User> {
+        return this.repository.findOne({ where: { id: Equal(givenID) } });
+    }
+
+    async create(lastname: string, firstname: string, age: number, password: string): Promise<User> {
         const hash = await bcrypt.hash(password, saltOrRounds);
-        const newUser = this.repository.create({
+        const usr = this.repository.create({
             lastname: lastname,
             firstname: firstname,
             age: age,
             password: hash
         })
-        await this.repository.save(newUser);
-        return newUser;
+        return this.repository.save(usr);
     }
 
-    @Put(':id')
-    async edit(@Param() id: number, @Body() lastname: string, firstname: string, age: number, password: string): Promise<User> {
-        let u: User = await this.getByID(id);
+    async update(id: number, lastname: string, firstname: string, age: number, password: string): Promise<User> {
+        let usr: User = await this.get(id);
         if (lastname !== undefined) {
-            u.lastname = lastname;
+            usr.lastname = lastname;
         }
         if (firstname !== undefined) {
-            u.firstname = firstname;
+            usr.firstname = firstname;
         }
         if (age !== undefined) {
-            u.age = age;
+            usr.age = age;
         }
         if (password !== undefined) {
             const hash = await bcrypt.hash(password, saltOrRounds);
-            u.password = hash;
+            usr.password = hash;
         }
-        await this.repository.save(u);
-        return u;
+        return this.repository.save(usr);
     }
 
-    @Delete(':id')
-    async popFromUsers(@Param() id: number) {
-        let u: User = await this.getByID(id);
-        if (u !== undefined) {
-            this.repository.delete(u);
-        }
+    async delete(id: number): Promise<boolean> {
+        let res = await this.repository.delete(id);
+        return res.affected > 0;
     }
 
-    async getUsersByIDs(ids : number[]): Promise<User[]>{
-        let list : User[];
-        for (var id of ids) {
-            let u : User = await this.getByID(id);
-            list.push(u);
-        }
-        return list;
-    }
 }

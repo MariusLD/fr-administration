@@ -1,16 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "src/users/user.entity";
 
 export class AssociationInput {
     @ApiProperty({
-        description: 'The list of users\' ids',
-        example: "{0, 1, 2",
+        description: 'The list of users\'s ids',
+        example: "[0, 1, 2]",
         type: [Number],
     })
     public idUsers: number[];
 
     @ApiProperty({
-        description: 'The name of the associaiton',
+        description: 'The name of the association',
         example: "Les ptits filous",
         type: String,
     })

@@ -10,7 +10,7 @@ export class Login {
 
     @ApiProperty({
         description: 'The password',
-        example: 'password',
+        example: 'p9z&Vj@MO0#diu4An7c',
         type: String,
     })
     public password: string;
