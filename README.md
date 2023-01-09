@@ -1,3 +1,7 @@
+<h1>Les objectifs du projet :</h1>
+Le projet se présente comme le développement d’un site web, que ce soit sa partie back-office avec le back-end ou bien l’interface utilisateur avec le front-end. Le site en question permet de créer un réseau d’utilisateurs qui ont la possibilité de se connecter sur le site via leurs identifiants de connexion, ou bien se s'inscrire, ce qui leur permet alors de visualiser l’entièreté des utilisateurs qui ont un compte sur ce site, ils ont également accès à une page exclusive de leur profil et ont la possibilité d’en modifier les informations, que ce soit leur nom de famille, leur prénom, leur âge, ou bien leur mot de passe de connexion. Ces utilisateurs sont par la même occasion regroupés dans des associations qui se distinguent par leur nom et leur identifiant, chaque utilisateur peut donc se trouver dans aucune, une ou plusieurs associations. Au sein même d’une association, des rôles peuvent être attribués pour décrire une hiérarchie, ainsi un utilisateur peut être président ou trésorier de son association, mais ne l’est pas forcément dans d’autres associations.
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
