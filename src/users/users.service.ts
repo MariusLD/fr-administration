@@ -4,8 +4,8 @@ import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Association } from 'src/associations/association.entity';
-import { AssociationsService } from 'src/associations/associations.service';
+import { Association } from '../associations/association.entity';
+import { AssociationsService } from '../associations/associations.service';
 
 const saltOrRounds = 10;
 

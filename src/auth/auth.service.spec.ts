@@ -5,6 +5,8 @@ import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { AssociationsService } from '../associations/associations.service';
+import { Association } from '../associations/association.entity';
 
 export type MockType<T> = {
   [P in keyof T]?: jest.Mock<{}>;
@@ -25,7 +27,13 @@ describe('AuthService', () => {
         AuthService,
         UsersService,
         JwtService,
+        AssociationsService,
+        {
+          provide: getRepositoryToken(User),
+          useFactory: repositoryMockFactory,
+        },
         { provide: getRepositoryToken(User), useFactory: repositoryMockFactory },
+        { provide: getRepositoryToken(Association), useFactory: repositoryMockFactory}
       ],
     }).compile();
 
@@ -37,4 +45,5 @@ describe('AuthService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
 });

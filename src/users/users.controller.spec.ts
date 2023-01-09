@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { Association } from '../associations/association.entity';
+import { AssociationsService } from '../associations/associations.service';
 
 export type MockType<T> = {
   [P in keyof T]?: jest.Mock<{}>;
@@ -22,7 +24,9 @@ describe('UsersController', () => {
       controllers: [UsersController],
       providers: [
         UsersService,
-        { provide: getRepositoryToken(User), useFactory: repositoryMockFactory }
+        AssociationsService,
+        { provide: getRepositoryToken(User), useFactory: repositoryMockFactory },
+        { provide: getRepositoryToken(Association), useFactory: repositoryMockFactory }
       ]
     }).compile();
 
@@ -34,7 +38,7 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('retrieveAll', () => {
+  describe('getAll', () => {
     it('should return an array of users', async () => {
       const expected = Promise.all([{
         id: 0,
@@ -48,7 +52,7 @@ describe('UsersController', () => {
     });
   });
   
-  describe('retrieveById', () => {
+  describe('getById', () => {
     it('should return a single user, with the provided id', async () => {
       const expected = await Promise.all([{
         id: 0,
@@ -63,4 +67,5 @@ describe('UsersController', () => {
       expect(await controller.getById(0)).toBe(expected[0]);
     })
   });
+
 });

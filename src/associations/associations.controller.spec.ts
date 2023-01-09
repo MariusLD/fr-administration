@@ -18,7 +18,6 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(()
 describe('AssociationsController', () => {
   let controller: AssociationsController;
   let service: AssociationsService;
-  let usersService: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,7 +31,6 @@ describe('AssociationsController', () => {
     }).compile();
 
     service = module.get<AssociationsService>(AssociationsService);
-    usersService = module.get<UsersService>(UsersService);
     controller = module.get<AssociationsController>(AssociationsController);
   });
 

@@ -4,7 +4,7 @@ import { User } from './user.entity';
 import { UserInput } from './user.input';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
-import { Association } from 'src/associations/association.entity';
+import { Association } from '../associations/association.entity';
 
 @ApiTags('users')
 @Controller('users')
