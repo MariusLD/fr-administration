@@ -44,6 +44,19 @@ Pour chacun des endpoints, un schéma d'input a été créé pour savoir quel ty
 Nous stockons toutes les données dans une base de donnée SQLite (le fichier mydatabase.db à la racine du projet), y compris les mots de passes qui sont cependant hachés auparavant, pour plus de sécurité.
 </p>
 
+<p align='justify'>
+Le projet est structuré de telle sorte à retrouver le répertoire source de l'api qui se nomme 'src'.
+Nous retrouvons également le répertoire 'test' où nous avons fait en sorte que les tests permettant de tester si la création d'un composant est possibile, en les lançant via la commande ng test, compilent correctement. 
+</p>
+
+<p align='justify'>
+La partie back du projet a été faite en différée dans un premier temps en fonction de la différence d'avancement dans ce dernier. Ainsi jusqu'au rôle il n'y a qu'une des deux versions qui a été commit, jusqu'à finalement effectuer un merge global lors de l'intégration de l'authentification à Swagger UI, puis du projet de l'UE Software Architecture.
+</p>
+
+<p align='justify'>
+Nous sommes finalement arrivés jusqu'à l'intégration complète des rôles, de la partie "Développement" du sujet, à notre back-end 
+</p>
+
 <br>
 
 ---
