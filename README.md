@@ -1,5 +1,54 @@
 <h1>Les objectifs du projet :</h1>
-Le projet se présente comme le développement d’un site web, que ce soit sa partie back-office avec le back-end ou bien l’interface utilisateur avec le front-end. Le site en question permet de créer un réseau d’utilisateurs qui ont la possibilité de se connecter sur le site via leurs identifiants de connexion, ou bien se s'inscrire, ce qui leur permet alors de visualiser l’entièreté des utilisateurs qui ont un compte sur ce site, ils ont également accès à une page exclusive de leur profil et ont la possibilité d’en modifier les informations, que ce soit leur nom de famille, leur prénom, leur âge, ou bien leur mot de passe de connexion. Ces utilisateurs sont par la même occasion regroupés dans des associations qui se distinguent par leur nom et leur identifiant, chaque utilisateur peut donc se trouver dans aucune, une ou plusieurs associations. Au sein même d’une association, des rôles peuvent être attribués pour décrire une hiérarchie, ainsi un utilisateur peut être président ou trésorier de son association, mais ne l’est pas forcément dans d’autres associations.
+
+<p align='justify'>
+Le projet se présente comme le développement d’un site web, que ce soit sa partie back-office avec le back-end ou bien l’interface utilisateur avec le front-end.
+<p>
+<p align='justify'>
+Ce repertoire contient la partie back-end du projet. Après l'avoir cloné, pour le lancer en mode production il faut lancer les commandes suivantes :
+</p>
+
+```bash
+npm install
+```
+
+pour installer les dépendances du projet, puis
+
+```bash
+npm run build
+```
+
+pour le compiler, et enfin
+
+```bash
+node dist/main.js
+```
+pour lancer l'application.
+
+<p align='justify'>
+Il faut ensuite ouvrir un navigateur et aller sur <a href='http://localhost:3000/'>http://localhost:3000/</a> pour voir apparaître un magnifique "Hello World!", ou sur <a href='http://localhost:3000/api'>http://localhost:3000/api</a> pour acceder à l'interface Swagger et intéragir pleinement avec notre API.
+</p>
+
+<p align='justify'>
+Depuis cet interface, il est possible de tester tous les endpoints proposés par notre API, et de voir les résultats obtenus. Ces endpoints ont été regroupés par catégorie.
+</p>
+
+<p align='justify'>
+Il y a le groupe défaut qui ne sert qu'à recevoir le message "Hello World!" ; le groupe users qui permet de créér, modifier, supprimer ou obtenir les informations sur un utilisateur, d'obtenir les informations sur tous les utilisateurs, ou enfin d'obtenir les informations sur les associations auxquelles appartient un utilisateur ; le groupe association permet l'équivalent du groupe users, avec un endpoint pour obtenir les informations sur tous les membres appartenant à une association ; le groupe auth permet de se connecter en utilisant l'identifiant et le mot de passe d'un utilisateur, et si la connexion est réussie, de recevoir un token permettant de déverrouiller les endpoints avec un cadenas (GET /users/{id} du groupe users) ; enfin le groupe role permet de créér, modifier, supprimer ou obtenir les informations sur un rôle pour un utilisateur donné dans une association donnée.
+</p>
+
+<p align='justify'>
+Pour chacun des endpoints, un schéma d'input a été créé pour savoir quel type de donnée est attendu. Ils sont visibles en bas de l'interface Swagger.
+</p>
+
+<p align='justify'>
+Nous stockons toutes les données dans une base de donnée SQLite (le fichier mydatabase.db à la racine du projet), y compris les mots de passes qui sont cependant hachés auparavant, pour plus de sécurité.
+</p>
+
+<br>
+
+---
+
+<br>
 
 
 <p align="center">
