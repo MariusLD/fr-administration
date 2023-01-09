@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
@@ -12,6 +12,7 @@ export class AssociationsService {
     constructor(
         @InjectRepository(Association)
         private repository: Repository<Association>,
+        @Inject(forwardRef(() => UsersService))
         private service: UsersService
     ) { }
 

@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 //https://bobbyhadz.com/blog/typescript-file-is-not-a-module
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Association } from 'src/associations/association.entity';
+import { AssociationsService } from 'src/associations/associations.service';
 
 const saltOrRounds = 10;
 
@@ -12,7 +14,9 @@ export class UsersService {
 
     constructor(
         @InjectRepository(User)
-        private repository: Repository<User>
+        private repository: Repository<User>,
+        @Inject(forwardRef(() => AssociationsService))
+        private assoService: AssociationsService
     ) { }
 
     async getAll(): Promise<User[]> {
@@ -21,6 +25,12 @@ export class UsersService {
 
     async get(givenID: number): Promise<User> {
         return this.repository.findOne({ where: { id: Equal(givenID) } });
+    }
+
+    async getAssos(id: number): Promise<Association[]> {
+        return (await this.assoService.getAll())
+            .filter((asso) => asso.users
+            .some((user) => user.id === id))
     }
 
     async create(lastname: string, firstname: string, age: number, password: string): Promise<User> {

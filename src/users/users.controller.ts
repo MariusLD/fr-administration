@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { UserInput } from './user.input';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { Association } from 'src/associations/association.entity';
 
 @ApiTags('users')
 @Controller('users')
@@ -39,6 +40,15 @@ export class UsersController {
             throw new HttpException(`Could not find a user with the id ${parameter}`, HttpStatus.NOT_FOUND)
         }
         return usr
+    }
+
+    @Get(':id/associations')
+    @ApiParam({
+        name: 'id',
+        description: 'The id of the user to get the associations they are a member of'
+    })
+    public async getAssos(@Param('id') parameter: number): Promise<Association[]> {
+        return this.service.getAssos(+parameter);
     }
 
     @Put(':id')
